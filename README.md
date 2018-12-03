@@ -1,6 +1,6 @@
-# pipeline-infrastructure-staging
+# paindumonde-infrastructure-staging
 
-This repo holds the Kubernetes configuration files for the pipeline application.
+This repo holds the Kubernetes configuration files for the paindumonde application.
 
 ## Target Environment
 
