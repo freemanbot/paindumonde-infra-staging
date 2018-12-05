@@ -15,7 +15,7 @@ spec:
         app: pipeline
     spec:
       containers:
-      - image: gcr.io/minikube-tutorial/pipeline:f2e47532590f3556b72504e9496a995e0a237f3a
+      - image: gcr.io/minikube-tutorial/pipeline:0dd08a9718e5c3cabd14bfee95fe1cb5ce1b1b55
         name: pipeline
         ports:
         - containerPort: 80
