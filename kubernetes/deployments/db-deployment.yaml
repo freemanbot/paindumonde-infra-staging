@@ -58,7 +58,7 @@ spec:
           value: app_user
         image: postgres:9.6
         name: db
-        resources: {}
+        # resources: {}
         ports:
           - containerPort: 5432
             name: postgres
