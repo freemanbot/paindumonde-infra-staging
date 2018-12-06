@@ -1,17 +1,21 @@
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: django-pv-claim
   labels:
     app: app
+  name: django-pv-claim
+  namespace: default
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
----
+  template:
+    spec:
+      containers:
+      - image: gcr.io/minikube-tutorial/paindumonde-django-app:71e18c2cf811a093c28c5f0d67e4989b655fb62e
+        name: app
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -22,6 +26,7 @@ metadata:
   labels:
     io.kompose.service: app
   name: app
+  namespace: default
 spec:
   replicas: 1
   strategy: {}
@@ -43,15 +48,15 @@ spec:
           value: "9200"
         - name: ELASTICSEARCH_ENDPOINT
           value: elasticsearch
-        image: paindumonde-django-app:tag
+        image: gcr.io/minikube-tutorial/paindumonde-django-app:71e18c2cf811a093c28c5f0d67e4989b655fb62e
         name: app
         ports:
         - containerPort: 8000
           name: app
-        volumeMounts:
-        - name: django-persistent-storage
-          mountPath: /data
         resources: {}
+        volumeMounts:
+        - mountPath: /data
+          name: django-persistent-storage
       restartPolicy: Always
       volumes:
       - name: django-persistent-storage
