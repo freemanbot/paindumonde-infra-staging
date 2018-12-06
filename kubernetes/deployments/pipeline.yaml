@@ -1,0 +1,23 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: pipeline
+  name: pipeline
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: pipeline
+  template:
+    metadata:
+      labels:
+        app: pipeline
+    spec:
+      containers:
+      - image: gcr.io/minikube-tutorial/pipeline:218af126ca6655aaedf1dee3baf05099eaf396e6
+        name: pipeline
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
