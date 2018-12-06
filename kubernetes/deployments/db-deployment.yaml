@@ -1,0 +1,73 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgres-pv-volume
+  labels:
+    type: local
+    app: db
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/data"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgres-pv-claim
+  labels:
+    app: db
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: db
+  name: db
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: db
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: db
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          value: app_db
+        - name: POSTGRES_PASSWORD
+          value: changeme
+        - name: POSTGRES_USER
+          value: app_user
+        image: postgres:9.6
+        name: db
+        resources: {}
+        ports:
+          - containerPort: 5432
+            name: postgres
+        volumeMounts:
+          - name: postgredb
+            mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: postgredb
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,59 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: django-pv-claim
+  labels:
+    app: app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yml
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: app
+  name: app
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: app
+    spec:
+      containers:
+      - env:
+        - name: CACHE_URL
+          value: redis://redis
+        - name: DATABASE_URL
+          value: postgres://app_user:changeme@db/app_db
+        - name: DJANGO_SECRET_KEY
+          value: changeme
+        - name: ELASTICSEARCH_PORT
+          value: "9200"
+        - name: ELASTICSEARCH_ENDPOINT
+          value: elasticsearch
+        image: paindumonde-django-app:tag
+        name: app
+        ports:
+        - containerPort: 8000
+          name: app
+        volumeMounts:
+        - name: django-persistent-storage
+          mountPath: /data
+        resources: {}
+      restartPolicy: Always
+      volumes:
+      - name: django-persistent-storage
+        persistentVolumeClaim:
+          claimName: django-pv-claim
