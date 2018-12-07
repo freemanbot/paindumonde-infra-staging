@@ -39,7 +39,7 @@ spec:
           value: postgres://app_user:changeme@db/app_db
         - name: DJANGO_SECRET_KEY
           value: changeme
-        image: paindumonde-django-app:tag
+        image: gcr.io/minikube-tutorial/paindumonde-django-app:ea878a04402c23ca50262fcbc69c00d4545ecddb
         name: app
         ports:
         - containerPort: 8000
