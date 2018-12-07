@@ -21,9 +21,9 @@ metadata:
   labels:
     app: db
 spec:
-  # storageClassName: manual
+  storageClassName: fast
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
