@@ -30,7 +30,7 @@ spec:
           value: "9200"
         - name: ELASTICSEARCH_ENDPOINT
           value: elasticsearch
-        image: gcr.io/minikube-tutorial/paindumonde-django-app:2e0efc29b2c58d6ee1e73fe02040ceae9c76cdea
+        image: gcr.io/minikube-tutorial/paindumonde-django-app:ea878a04402c23ca50262fcbc69c00d4545ecddb
         name: app
         ports:
         - containerPort: 8000
