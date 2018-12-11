@@ -1,17 +1,3 @@
-# ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: django-pv-claim
-#   labels:
-#     app: app
-# spec:
-#   accessModes:
-#     - ReadWriteMany
-#   resources:
-#     requests:
-#       storage: 1Gi
-# ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -22,6 +8,7 @@ metadata:
   labels:
     io.kompose.service: app
   name: app
+  namespace: default
 spec:
   replicas: 1
   strategy: {}
@@ -39,17 +26,10 @@ spec:
           value: postgres://app_user:changeme@db/app_db
         - name: DJANGO_SECRET_KEY
           value: changeme
-        image: gcr.io/minikube-tutorial/paindumonde-django-app:ea878a04402c23ca50262fcbc69c00d4545ecddb
+        image: gcr.io/minikube-tutorial/paindumonde-django-app:e243ff7c98744b02f66e6f42310b4d0356b43402
         name: app
         ports:
         - containerPort: 8000
           name: app
-        # volumeMounts:
-        # - name: django-persistent-storage
-        #   mountPath: /media
         resources: {}
       restartPolicy: Always
-      # volumes:
-      # - name: django-persistent-storage
-      #   persistentVolumeClaim:
-      #     claimName: django-pv-claim
