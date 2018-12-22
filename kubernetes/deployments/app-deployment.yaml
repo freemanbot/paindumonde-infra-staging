@@ -8,7 +8,6 @@ metadata:
   labels:
     io.kompose.service: app
   name: app
-  namespace: default
 spec:
   replicas: 1
   strategy:
@@ -58,10 +57,18 @@ spec:
             configMapKeyRef:
               key: DJANGO_SECRET_KEY
               name: django-envs-production
+        # image: paindumonde-django-app:tag
         image: gcr.io/minikube-tutorial/paindumonde-django-app:1124cbf2fa0a5151013a2dea1f847b041d715f78
         name: app
         ports:
         - containerPort: 8000
           name: app
-        resources: {}
+      #   volumeMounts:
+      #   - name: django-persistent-storage
+      #     mountPath: /code/bakerydemo/media/images
+      # volumes:
+      # - name: django-persistent-storage
+      #   persistentVolumeClaim:
+      #     claimName: django-pv-claim
       restartPolicy: Always
+status: {}
