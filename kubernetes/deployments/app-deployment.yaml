@@ -7,7 +7,7 @@
 #     app: app
 # spec:
 #   accessModes:
-#     - ReadWriteMany
+#     - ReadWriteOnce
 #   resources:
 #     requests:
 #       storage: 1Gi
@@ -24,7 +24,8 @@ metadata:
   name: app
 spec:
   replicas: 1
-  strategy: {}
+  strategy:
+    type: Recreate
   template:
     metadata:
       creationTimestamp: null
@@ -33,23 +34,55 @@ spec:
     spec:
       containers:
       - env:
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_DB
+              name: django-envs-production
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_HOST
+              name: django-envs-production
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_PASSWORD
+              name: django-envs-production
+        - name: POSTGRES_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_PORT
+              name: django-envs-production
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_USER
+              name: django-envs-production
         - name: CACHE_URL
           value: redis://redis
         - name: DATABASE_URL
-          value: postgres://app_user:changeme@db/app_db
+          valueFrom:
+            configMapKeyRef:
+              key: DATABASE_URL
+              name: django-envs-production
         - name: DJANGO_SECRET_KEY
-          value: changeme
-        image: gcr.io/minikube-tutorial/paindumonde-django-app:ea878a04402c23ca50262fcbc69c00d4545ecddb
+          valueFrom:
+            configMapKeyRef:
+              key: DJANGO_SECRET_KEY
+              name: django-envs-production
+        image: paindumonde-django-app:tag
+        # image: gcr.io/minikube-tutorial/paindumonde-django-app:ea878a04402c23ca50262fcbc69c00d4545ecddb
         name: app
         ports:
         - containerPort: 8000
           name: app
-        # volumeMounts:
-        # - name: django-persistent-storage
-        #   mountPath: /media
-        resources: {}
-      restartPolicy: Always
+      #   volumeMounts:
+      #   - name: django-persistent-storage
+      #     mountPath: /code/bakerydemo/media/images
       # volumes:
       # - name: django-persistent-storage
       #   persistentVolumeClaim:
       #     claimName: django-pv-claim
+      restartPolicy: Always
+status: {}

@@ -11,8 +11,9 @@ metadata:
 spec:
   ports:
   - name: "8000"
-    port: 8000
+    port: 80
     targetPort: 8000
+  type: LoadBalancer
   selector:
     io.kompose.service: app
 status:

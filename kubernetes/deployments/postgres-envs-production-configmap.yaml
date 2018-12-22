@@ -1,0 +1,13 @@
+apiVersion: v1
+data:
+  POSTGRES_DB: bakerydemodb
+  POSTGRES_HOST: postgres
+  POSTGRES_PASSWORD: Vj8D9KEddrXegCzZxnKpfc3dM6ijGAv9RqLpNAcJB6ptx
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: 7F75dWFPm45re8UwV5rRz
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: postgres-envs-production
+  name: postgres-envs-production

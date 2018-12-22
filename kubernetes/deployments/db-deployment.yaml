@@ -1,32 +1,16 @@
-# kind: PersistentVolume
-# apiVersion: v1
-# metadata:
-#   name: postgres-pv-volume
-#   labels:
-#     type: local
-#     app: db
-# spec:
-#   storageClassName: manual
-#   capacity:
-#     storage: 1Gi
-#   accessModes:
-#     - ReadWriteMany
-#   hostPath:
-#     path: "/mnt/data"
 ---
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
   name: postgres-pv-claim
   labels:
     app: db
 spec:
-  storageClassName: fast
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 2Gi
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -51,14 +35,34 @@ spec:
       containers:
       - env:
         - name: POSTGRES_DB
-          value: app_db
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_DB
+              name: postgres-envs-production
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_HOST
+              name: postgres-envs-production
         - name: POSTGRES_PASSWORD
-          value: changeme
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_PASSWORD
+              name: postgres-envs-production
+        - name: POSTGRES_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_PORT
+              name: postgres-envs-production
         - name: POSTGRES_USER
-          value: app_user
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_USER
+              name: postgres-envs-production
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
         image: postgres:9.6
         name: db
-        # resources: {}
         ports:
           - containerPort: 5432
             name: postgres
